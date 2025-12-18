@@ -1,0 +1,134 @@
+<p-dialog 
+  [header]="dialogTitle" 
+  [(visible)]="visible" 
+  [modal]="true"
+  [style]="{ width: '600px', maxWidth: '90vw' }"
+  [contentStyle]="{ padding: '2rem' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="handleClose()"
+>
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <div class="space-y-2">
+      <label for="title" class="block text-sm font-semibold text-gray-700">
+        Título <span class="text-red-500">*</span>
+      </label>
+      <input 
+        id="title"
+        type="text" 
+        pInputText 
+        formControlName="title"
+        placeholder="Ingrese el título de la tarea"
+        class="w-full p-3.5 border-2 border-gray-200 rounded-xl bg-white transition-all"
+        [class.border-red-500]="isFieldInvalid('title')"
+      />
+      @if (isFieldInvalid('title')) {
+        <small class="block text-red-500 text-xs mt-1">{{ getErrorMessage('title') }}</small>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label for="description" class="block text-sm font-semibold text-gray-700">Descripción</label>
+      <textarea 
+        id="description"
+        pTextarea 
+        formControlName="description"
+        placeholder="Ingrese la descripción"
+        rows="3"
+        class="w-full p-3.5 border-2 border-gray-200 rounded-xl bg-white transition-all"
+      ></textarea>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <label for="status" class="block text-sm font-semibold text-gray-700">
+          Estado <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="status"
+          [options]="statusOptions"
+          formControlName="status"
+          placeholder="Seleccione estado"
+          class="w-full"
+        ></p-select>
+      </div>
+
+      <div class="space-y-2">
+        <label for="priority" class="block text-sm font-semibold text-gray-700">
+          Prioridad <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="priority"
+          [options]="priorityOptions"
+          formControlName="priority"
+          placeholder="Seleccione prioridad"
+          class="w-full"
+        ></p-select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <label for="dueDate" class="block text-sm font-semibold text-gray-700">
+          Fecha de Vencimiento <span class="text-red-500">*</span>
+        </label>
+        <p-datepicker
+          id="dueDate"
+          formControlName="dueDate"
+          [showIcon]="true"
+          dateFormat="dd/mm/yy"
+          placeholder="Seleccione fecha"
+          class="w-full"
+        ></p-datepicker>
+      </div>
+
+      <div class="space-y-2">
+        <label for="assignee" class="block text-sm font-semibold text-gray-700">
+          Asignado a <span class="text-red-500">*</span>
+        </label>
+        <input 
+          id="assignee"
+          type="text" 
+          pInputText 
+          formControlName="assignee"
+          placeholder="Nombre del asignado"
+          class="w-full p-3.5 border-2 border-gray-200 rounded-xl bg-white transition-all"
+          [class.border-red-500]="isFieldInvalid('assignee')"
+        />
+        @if (isFieldInvalid('assignee')) {
+          <small class="block text-red-500 text-xs mt-1">{{ getErrorMessage('assignee') }}</small>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <label for="tags" class="block text-sm font-semibold text-gray-700">Etiquetas</label>
+      <input 
+        id="tags"
+        type="text" 
+        pInputText 
+        formControlName="tagsInput"
+        placeholder="Etiquetas separadas por comas"
+        class="w-full p-3.5 border-2 border-gray-200 rounded-xl bg-white transition-all"
+      />
+      <small class="block text-gray-500 text-xs">Separe las etiquetas con comas</small>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-6 border-t border-gray-200 mt-6">
+      <button 
+        type="button"
+        class="px-6 py-3 text-gray-700 bg-white hover:bg-gray-50 border-2 border-gray-300 rounded-xl font-semibold transition-all shadow-sm hover:shadow"
+        (click)="handleClose()">
+        <i class="pi pi-times mr-2"></i>
+        Cancelar
+      </button>
+      <button 
+        type="submit"
+        class="px-6 py-3 text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="taskForm.invalid">
+        <i class="pi pi-check mr-2"></i>
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>

@@ -1,0 +1,49 @@
+::ng-deep .p-confirm-dialog {
+  background: white !important;
+}
+
+::ng-deep .p-confirm-dialog .p-dialog-content {
+  background: white !important;
+}
+
+::ng-deep .p-confirm-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+}
+
+::ng-deep .p-confirm-dialog .p-dialog-footer {
+  background: white !important;
+  padding: 2rem 3rem !important;
+}
+
+::ng-deep .p-dialog-footer {
+  justify-content: center !important;
+  gap: 1rem !important;
+}
+
+::ng-deep .p-confirm-dialog .p-dialog-footer .p-button {
+  min-width: 120px !important;
+  margin: 0 1rem !important;
+}
+
+::ng-deep .p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+::ng-deep .p-select-overlay {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .p-select-overlay .p-select-list {
+  background: white !important;
+}
+
+::ng-deep .p-select-overlay .p-select-option {
+  background: white !important;
+}
+
+::ng-deep .p-select-overlay .p-select-option:hover {
+  background: #f3f4f6 !important;
+}

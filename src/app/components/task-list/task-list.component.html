@@ -1,0 +1,141 @@
+<div class="bg-white rounded-2xl shadow-lg p-6">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Lista de Tareas</h2>
+    <button 
+      type="button"
+      class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+      (click)="openNewTaskDialog()">
+      <i class="pi pi-plus"></i>
+      Nueva Tarea
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="relative">
+      <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+      <input 
+        pInputText 
+        type="text" 
+        placeholder="Buscar por título..." 
+        class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all bg-white"
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+
+    <p-select
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      placeholder="Filtrar por estado"
+      [showClear]="true"
+      class="w-full"
+    ></p-select>
+
+    <p-select
+      [options]="priorityOptions"
+      [(ngModel)]="selectedPriority"
+      placeholder="Filtrar por prioridad"
+      [showClear]="true"
+      class="w-full"
+    ></p-select>
+  </div>
+
+  <p-table 
+    [value]="tasks()" 
+    [paginator]="true" 
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['title', 'description', 'assignee']"
+    [filterDelay]="0"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    styleClass="p-datatable-sm"
+    #dt
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="title">
+          Título <p-sortIcon field="title"></p-sortIcon>
+        </th>
+        <th pSortableColumn="status">
+          Estado <p-sortIcon field="status"></p-sortIcon>
+        </th>
+        <th pSortableColumn="priority">
+          Prioridad <p-sortIcon field="priority"></p-sortIcon>
+        </th>
+        <th pSortableColumn="dueDate">
+          Fecha Vencimiento <p-sortIcon field="dueDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="assignee">
+          Asignado <p-sortIcon field="assignee"></p-sortIcon>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-task>
+      <tr>
+        <td>
+          <div class="font-semibold">{{ task.title }}</div>
+          <div class="text-sm text-gray-500">{{ task.description }}</div>
+        </td>
+        <td>
+          <p-tag 
+            [value]="getStatusLabel(task.status)" 
+            [severity]="getStatusSeverity(task.status)"
+          ></p-tag>
+        </td>
+        <td>
+          <p-tag 
+            [value]="getPriorityLabel(task.priority)" 
+            [severity]="getPrioritySeverity(task.priority)"
+          ></p-tag>
+        </td>
+        <td>{{ task.dueDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ task.assignee }}</td>
+        <td>
+          <div class="flex gap-2">
+            <button 
+              type="button"
+              class="w-9 h-9 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors flex items-center justify-center"
+              pTooltip="Editar"
+              (click)="openEditTaskDialog(task)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              type="button"
+              class="w-9 h-9 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors flex items-center justify-center"
+              pTooltip="Eliminar"
+              (click)="deleteTask(task)">
+              <i class="pi pi-trash"></i>
+            </button>
+            @if (task.status !== 'completed') {
+              <button 
+                type="button"
+                class="w-9 h-9 rounded-lg bg-green-50 hover:bg-green-100 text-green-600 transition-colors flex items-center justify-center"
+                pTooltip="Completar"
+                (click)="changeStatus(task, 'completed')">
+                <i class="pi pi-check"></i>
+              </button>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center py-8">
+          <i class="pi pi-inbox text-4xl text-gray-400 mb-2"></i>
+          <p class="text-gray-500">No se encontraron tareas</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<app-task-form
+  [visible]="showDialog()"
+  [task]="selectedTask()"
+  (onClose)="closeDialog()"
+  (onSave)="onTaskSaved()"
+></app-task-form>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
